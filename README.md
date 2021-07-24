@@ -11,5 +11,8 @@ Then, just run:
 docker-compose up -d
 ```
 
-- Presto running at [http://localhost:8080](http://localhost:8080)
-- Apache Ranger running at [http://localhost:6080](http://localhost:6080)
+- Presto running at [http://localhost:8080](http://localhost:8080).
+- Apache Ranger running at [http://localhost:6080](http://localhost:6080).
+
+## Apache Ranger
+User is `admin` and password is `ranger1234`.
