@@ -1,13 +1,21 @@
 version: '3.7'
 
-services: 
+networks: 
+  presto-ranger:
+
+services:
+ 
+  # The prestodb-sandbox container includes latest Presto (from Prestodb.io) as well as the Presto CLI.
   presto:
     image: ahanaio/prestodb-sandbox:0.257
     container_name: presto
     ports: 
       - 8080:8080
-    # volumes: 
-    #   - ./presto/etc:/opt/presto-server/etc
+    networks: 
+      - presto-ranger
+    volumes: 
+      - ./presto/conf:/opt/presto-server/etc
+      - ./presto/data:/var/lib/presto
 
   # superset:
   #   image: apache/superset
@@ -38,6 +46,8 @@ services:
     depends_on:
       - ranger-mysql
       - ranger-solr
+    networks: 
+      - presto-ranger
 
   ranger-mysql:
     image: mysql:8.0.26
@@ -51,6 +61,8 @@ services:
       MYSQL_USER: rangeradmin
       MYSQL_PASSWORD: rangeradmin
       MYSQL_DATABASE: ranger
+    networks: 
+      - presto-ranger
 
   ranger-solr:
     image: solr:8.9.0
@@ -63,6 +75,8 @@ services:
       - solr-precreate
       - ranger_audits
       - /opt/solr/server/solr/configsets/ranger_audits
+    networks: 
+      - presto-ranger
 
 
 # docker exec -it superset superset fab create-admin \
