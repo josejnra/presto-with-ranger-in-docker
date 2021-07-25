@@ -1,4 +1,4 @@
-FROM maven:3.8.1-jdk-8
+FROM maven:3.6.2-jdk-8
 
 LABEL version=2.1.0
 
@@ -16,7 +16,7 @@ RUN apt-get -q update && apt-get install -y -q python gcc \
  && tar zxvf apache-ranger-${RANGER_VERSION}.tar.gz \
  && cd apache-ranger-${RANGER_VERSION} \
  && export MAVEN_OPTS="-Xmx2G" \
- && mvn -DskipTests clean package \
+ && mvn -Dmaven.test.skip -DskipTests package \
  && cp target/ranger-${RANGER_VERSION}-admin.tar.gz /opt \
  && cd /opt \
  && tar zxvf ranger-${RANGER_VERSION}-admin.tar.gz \
