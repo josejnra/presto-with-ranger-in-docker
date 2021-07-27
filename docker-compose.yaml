@@ -1,7 +1,7 @@
 version: '3.7'
 
 networks: 
-  presto-ranger:
+  presto:
 
 services:
  
@@ -12,7 +12,7 @@ services:
     ports: 
       - 8080:8080
     networks: 
-      - presto-ranger
+      - presto
     volumes: 
       - ./presto/conf:/opt/presto-server/etc
       - ./presto/data:/var/lib/presto
@@ -25,14 +25,14 @@ services:
   #   depends_on: 
   #     - presto
 
-  # dbeaver:
+  # cloudbeaver:
   #   image: dbeaver/cloudbeaver:21.1.0
-  #   container_name: dbeaver
+  #   container_name: cloudbeaver
   #   ports: 
   #     - 8978:8978
   #   volumes: 
   #     - ./dbeaver/workspace:/opt/cloudbeaver/workspace
-  #   depends_on: 
+  #   networks:
   #     - presto
   
   ranger-admin:
@@ -44,25 +44,26 @@ services:
     ports:
       - 6080:6080
     depends_on:
-      - ranger-mysql
+      - mysql
       - ranger-solr
     networks: 
-      - presto-ranger
+      - presto
 
-  ranger-mysql:
+  mysql:
     image: mysql:8.0.26
-    container_name: ranger-mysql
+    container_name: mysql
     ports:
       - 3306:3306
     volumes:
-      - ./ranger/mysql:/etc/mysql/conf.d
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
     environment:
+      MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: rangeradmin
-      MYSQL_PASSWORD: rangeradmin
-      MYSQL_DATABASE: ranger
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: password
     networks: 
-      - presto-ranger
+      - presto
 
   ranger-solr:
     image: solr:8.9.0
@@ -76,7 +77,7 @@ services:
       - ranger_audits
       - /opt/solr/server/solr/configsets/ranger_audits
     networks: 
-      - presto-ranger
+      - presto
 
 
 # docker exec -it superset superset fab create-admin \
@@ -89,3 +90,73 @@ services:
 # docker exec -it superset superset db upgrade
 
 # docker exec -it superset superset init
+
+
+  # mysql-workbench:
+  #   image: ghcr.io/linuxserver/mysql-workbench:version-8.0.26
+  #   container_name: mysql-workbench
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Sao_Paulo
+  #   ports:
+  #     - 3000:3000
+  #   cap_add:
+  #     - IPC_LOCK
+  #   networks:
+  #     - presto
+
+  # ldap-auth:
+  #   image: ghcr.io/linuxserver/ldap-auth:version-3.3.1
+  #   container_name: ldap-auth
+  #   environment:
+  #     - TZ=America/Sao_Paulo
+  #     - FERNETKEY= #optional
+  #     - CERTFILE= #optional
+  #     - KEYFILE= #optional
+  #   ports:
+  #     - 8888:8888
+  #     - 9000:9000
+  #   networks:
+  #     - presto
+  
+  # openldap:
+  #   image: bitnami/openldap:2.5.5
+  #   ports:
+  #     - 1389:1389
+  #     - 1636:1636
+  #   environment:
+  #     - LDAP_ADMIN_USERNAME=admin
+  #     - LDAP_ADMIN_PASSWORD=adminpassword
+  #     - LDAP_USERS=user01,user02
+  #     - LDAP_PASSWORDS=password1,password2
+  #   networks:
+  #     - presto
+  #   volumes:
+  #     - ./openldap_data:/bitnami/openldap
+
+  hive:
+    image: hive:0.1
+    build: 
+      context: ./hive
+      dockerfile: Dockerfile
+    container_name: hive
+    ports: 
+      - 9083:9083
+    networks: 
+      - presto
+
+  hue:
+    image: hue:4.10.0
+    build: 
+      context: hue
+      dockerfile: Dockerfile
+    container_name: hue
+    ports: 
+      - 8888:8888
+    volumes: 
+      - ./hue/hue.ini:/usr/share/hue/desktop/conf/z-hue-overrides.ini
+    networks: 
+      - presto
+    depends_on: 
+      - mysql
