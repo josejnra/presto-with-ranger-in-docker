@@ -46,6 +46,17 @@ Presto is an open source distributed system that can run on multiple machines. I
 
 **Exchange**: Exchanges transfer data between Presto nodes for different stages of a query. Tasks produce data into an output buffer and consume data from other tasks using an exchange client.
 
+### Presto CLI 
+Example of commands:
+```bash
+presto> show catalogs;
+presto> show schemas from jmx;
+presto> show tables from jmx.current;
+presto> select * from jmx.current."com.facebook.airlift.discovery.client:name=announcer";
+```
+
+## Hive
+A data warehouse software that facilitates reading, writing, and managing large datasets residing in distributed storage using SQL. Structure can be projected onto data already in storage. A command line tool and JDBC driver are provided to connect users to Hive. So, basically Hive sits on top of the aforementioned Hadoop stack and it allows you to directly use SQL on your cluster.
 
 ## Apache Ranger
 User is `admin` and password is `ranger1234`. The UI may take a while in order to start.
@@ -71,7 +82,11 @@ Used for:
 ### HDFS
 Store Audit Logs (Optional, but recommended)
 
+## Hue
+An open source SQL Assistant for Databases & Data Warehouses i.e. an easy GUI for looking into HDFS, Hive etc. Very handy for beginners! It is maintained by Cloudera and you can find it on GitHub.
+
 # Referencies
 - [AN INTRODUCTION TO THE PRESTO ARCHITECTURE](https://www.alluxio.io/learn/presto/architecture/)
 - [Presto Docs](https://prestodb.io/docs/current/overview/concepts.html)
 - [Apache Ranger](https://cwiki.apache.org/confluence/display/RANGER/Index)
+- [Hive](https://towardsdatascience.com/making-big-moves-in-big-data-with-hadoop-hive-parquet-hue-and-docker-320a52ca175)

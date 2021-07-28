@@ -17,13 +17,26 @@ services:
       - ./presto/conf:/opt/presto-server/etc
       - ./presto/data:/var/lib/presto
 
-  # superset:
-  #   image: apache/superset
-  #   container_name: superset
-  #   ports: 
-  #     - 8088:8088
-  #   depends_on: 
-  #     - presto
+  superset:
+    image: apache/superset:1.2.0
+    container_name: superset
+    ports: 
+      - 8088:8088
+    depends_on: 
+      - presto
+    networks: 
+      - presto
+
+# docker exec -it superset superset fab create-admin \
+#           --username admin \
+#           --firstname Superset \
+#           --lastname Admin \
+#           --email admin@superset.com \
+#           --password admin
+
+# docker exec -it superset superset db upgrade
+
+# docker exec -it superset superset init
 
   # cloudbeaver:
   #   image: dbeaver/cloudbeaver:21.1.0
@@ -34,7 +47,9 @@ services:
   #     - ./dbeaver/workspace:/opt/cloudbeaver/workspace
   #   networks:
   #     - presto
-  
+  #   # user: cbadmin
+  #   # pass: password
+
   ranger-admin:
     image: ranger-admin:1.0
     build: 
@@ -46,6 +61,20 @@ services:
     depends_on:
       - mysql
       - ranger-solr
+    networks: 
+      - presto
+
+  ranger-solr:
+    image: solr:8.9.0
+    container_name: ranger-solr
+    ports:
+      - 8983:8983
+    volumes:
+      - ./ranger/solr:/opt/solr/server/solr/configsets/ranger_audits/conf
+    entrypoint:
+      - solr-precreate
+      - ranger_audits
+      - /opt/solr/server/solr/configsets/ranger_audits
     networks: 
       - presto
 
@@ -64,33 +93,6 @@ services:
       MYSQL_PASSWORD: password
     networks: 
       - presto
-
-  ranger-solr:
-    image: solr:8.9.0
-    container_name: ranger-solr
-    ports:
-      - 8983:8983
-    volumes:
-      - ./ranger/solr:/opt/solr/server/solr/configsets/ranger_audits/conf
-    entrypoint:
-      - solr-precreate
-      - ranger_audits
-      - /opt/solr/server/solr/configsets/ranger_audits
-    networks: 
-      - presto
-
-
-# docker exec -it superset superset fab create-admin \
-#           --username admin \
-#           --firstname Superset \
-#           --lastname Admin \
-#           --email admin@superset.com \
-#           --password admin
-
-# docker exec -it superset superset db upgrade
-
-# docker exec -it superset superset init
-
 
   # mysql-workbench:
   #   image: ghcr.io/linuxserver/mysql-workbench:version-8.0.26
@@ -135,28 +137,28 @@ services:
   #   volumes:
   #     - ./openldap_data:/bitnami/openldap
 
-  hive:
-    image: hive:0.1
-    build: 
-      context: ./hive
-      dockerfile: Dockerfile
-    container_name: hive
-    ports: 
-      - 9083:9083
-    networks: 
-      - presto
+  # hive:
+  #   image: hive:0.1
+  #   build: 
+  #     context: ./hive
+  #     dockerfile: Dockerfile
+  #   container_name: hive
+  #   ports: 
+  #     - 9083:9083
+  #   networks: 
+  #     - presto
 
-  hue:
-    image: hue:4.10.0
-    build: 
-      context: hue
-      dockerfile: Dockerfile
-    container_name: hue
-    ports: 
-      - 8888:8888
-    volumes: 
-      - ./hue/hue.ini:/usr/share/hue/desktop/conf/z-hue-overrides.ini
-    networks: 
-      - presto
-    depends_on: 
-      - mysql
+  # hue:
+  #   image: hue:4.10.0
+  #   build: 
+  #     context: hue
+  #     dockerfile: Dockerfile
+  #   container_name: hue
+  #   ports: 
+  #     - 8888:8888
+  #   volumes: 
+  #     - ./hue/hue.ini:/usr/share/hue/desktop/conf/z-hue-overrides.ini
+  #   networks: 
+  #     - presto
+  #   depends_on: 
+  #     - mysql
