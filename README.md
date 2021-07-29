@@ -13,6 +13,7 @@ docker-compose up -d
 
 - Presto running at [http://localhost:8080](http://localhost:8080).
 - Apache Ranger running at [http://localhost:6080](http://localhost:6080).
+  - User is `admin` and password is `ranger1234`. The UI may take a while in order to start.
 - Apache Solr running at [http://localhost:8983](http://localhost:8983).
 
 ## Presto
@@ -89,12 +90,22 @@ Metastore is an object store with a database or file backed store. The database 
 Data in Hive is organized into:
 
 - **Tables**: These are analogous to Tables in Relational Databases. Tables can be filtered, projected, joined and unioned. Additionally all the data of a table is stored in a directory in HDFS. Hive also supports the notion of external tables wherein a table can be created on prexisting files or directories in HDFS by providing the appropriate location to the table creation DDL. The rows in a table are organized into typed columns similar to Relational Databases.
-- **Partitions**: Each Table can have one or more partition keys which determine how the data is stored, for example a table T with a date partition column ds had files with data for a particular date stored in the <table location>/ds=<date> directory in HDFS. Partitions allow the system to prune data to be inspected based on query predicates, for example a query that is interested in rows from T that satisfy the predicate T.ds = '2008-09-01' would only have to look at files in <table location>/ds=2008-09-01/ directory in HDFS.
+- **Partitions**: Each Table can have one or more partition keys which determine how the data is stored, for example a table T with a date partition column ds had files with data for a particular date stored in the `<table location>/ds=<date>` directory in HDFS. Partitions allow the system to prune data to be inspected based on query predicates, for example a query that is interested in rows from T that satisfy the predicate T.ds = '2008-09-01' would only have to look at files in `<table location>/ds=2008-09-01/` directory in HDFS.
 - **Buckets**: Data in each partition may in turn be divided into Buckets based on the hash of a column in the table. Each bucket is stored as a file in the partition directory. Bucketing allows the system to efficiently evaluate queries that depend on a sample of data (these are queries that use the SAMPLE clause on the table).
 
 
 ## Apache Ranger
-User is `admin` and password is `ranger1234`. The UI may take a while in order to start.
+Apache Ranger is a framework to enable, monitor and manage comprehensive data security across the Hadoop platform.
+
+The vision with Ranger is to provide comprehensive security across the Apache Hadoop ecosystem. Enterprises can potentially run multiple workloads, in a multi tenant environment. Data security within Hadoop needs to evolve to support multiple use cases for data access, while also providing a framework for central administration of security policies and monitoring of user access.
+
+Apache Ranger has the following goals:
+
+- Centralized security administration to manage all security related tasks in a central UI or using REST APIs.
+- Fine grained authorization to do a specific action and/or operation with Hadoop component/tool and managed through a central administration tool.
+- Standardize authorization method across all Hadoop components.
+- Enhanced support for different authorization methods - Role based access control, attribute based access control etc.
+- Centralize auditing of user access and administrative actions (security related) within all the components of Hadoop.
 
 **Ranger Admin Portal** - This is the UI portal and RESTful server for managing policies, users and groups. It also contains the UI interface for Audit queries and adhoc reports.
 
@@ -103,14 +114,15 @@ User is `admin` and password is `ranger1234`. The UI may take a while in order t
 **Ranger KMS** - This service provides key management for Hadoop HDFS Encryption (TDE). It is highly scalable and provides access control and auditing. This service is optional and only needed if you are planning to use HDFS TDE.
 
 
-### RDMS - MySQL
-Used for:
+### Requirements
+> RDBMS - MySQL
+
 - Storing policies
 - Storing Ranger Users and Groups
 - Storing Audit Logs (Optional)
 
-### Solr
-Used for:
+> Solr
+
 - Store Audit Logs
 - Used by RangerAdmin Portal to search AuditLogs
 
