@@ -50,27 +50,27 @@ services:
   #   # user: cbadmin
   #   # pass: password
 
-  ranger-admin:
+  ranger:
     image: ranger-admin:1.0
     build: 
       context: ./ranger
       dockerfile: Dockerfile
-    container_name: ranger-admin
+    container_name: ranger
     ports:
       - 6080:6080
     depends_on:
       - mysql
-      - ranger-solr
-    networks: 
+      - solr
+    networks:
       - presto
 
-  ranger-solr:
+  solr:
     image: solr:8.9.0
-    container_name: ranger-solr
+    container_name: solr
     ports:
       - 8983:8983
     volumes:
-      - ./ranger/solr:/opt/solr/server/solr/configsets/ranger_audits/conf
+      - ./solr:/opt/solr/server/solr/configsets/ranger_audits/conf
     entrypoint:
       - solr-precreate
       - ranger_audits
