@@ -86,6 +86,7 @@ services:
     volumes:
       - ./mysql/conf:/etc/mysql/conf.d
       - ./mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ./mysql/data:/var/lib/mysql
     environment:
       MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: root
