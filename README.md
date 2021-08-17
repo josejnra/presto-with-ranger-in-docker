@@ -56,6 +56,11 @@ presto> show tables from jmx.current;
 presto> select * from jmx.current."com.facebook.airlift.discovery.client:name=announcer";
 ```
 
+
+### Apache Ranger Plugin
+In order to generate the `ranger-<version>-presto-plugin.tar.gz` you must follow the instructions described on this [link](ranger-<version>-knox-plugin.tar.gz).
+Just execute the **mvn** inside the presto-plugin folder.
+
 ## Apache Ranger
 Apache Ranger is a framework to enable, monitor and manage comprehensive data security across the Hadoop platform.
 
