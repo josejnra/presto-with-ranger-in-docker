@@ -7,25 +7,46 @@ services:
  
   # The prestodb-sandbox container includes latest Presto (from Prestodb.io) as well as the Presto CLI.
   presto:
-    image: ahanaio/prestodb-sandbox:0.257
+    image: meu-presto:0.257
+    build: 
+      context: ./presto
+      dockerfile: Dockerfile
     container_name: presto
     ports: 
       - 8080:8080
     networks: 
       - presto
     volumes: 
+      # - ./presto/data:/var/lib/presto
       - ./presto/conf:/opt/presto-server/etc
-      - ./presto/data:/var/lib/presto
 
-  superset:
-    image: apache/superset:1.2.0
-    container_name: superset
-    ports: 
-      - 8088:8088
-    depends_on: 
-      - presto
-    networks: 
-      - presto
+    # docker container cp ranger-presto-plugin presto:/opt/presto-server/plugin
+
+  # trino:
+  #   image: meu-trino:360
+  #   build: 
+  #     context: ./trino
+  #     dockerfile: Dockerfile
+  #   container_name: trino
+  #   ports: 
+  #     - 8080:8080
+  #   networks: 
+  #     - presto
+  #   volumes: 
+  #     - ./trino/conf:/etc/trino
+  #     - ./trino/ranger-presto-plugin:/usr/lib/trino/plugin/ranger-trino/plugin
+
+    # docker container cp ranger-presto-plugin trino:/usr/lib/trino/plugin
+
+  # superset:
+  #   image: apache/superset:1.2.0
+  #   container_name: superset
+  #   ports: 
+  #     - 8088:8088
+  #   depends_on: 
+  #     - presto
+  #   networks: 
+  #     - presto
 
 # docker exec -it superset superset fab create-admin \
 #           --username admin \
@@ -63,6 +84,9 @@ services:
       - solr
     networks:
       - presto
+  
+    # user: admin
+    # pass: ranger123
 
   solr:
     image: solr:8.9.0
@@ -75,7 +99,7 @@ services:
       - solr-precreate
       - ranger_audits
       - /opt/solr/server/solr/configsets/ranger_audits
-    networks: 
+    networks:
       - presto
 
   mysql:
@@ -92,7 +116,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: dbuser
       MYSQL_PASSWORD: password
-    networks: 
+    networks:
       - presto
 
   # mysql-workbench:
@@ -108,50 +132,6 @@ services:
   #     - IPC_LOCK
   #   networks:
   #     - presto
-
-  # ldap-auth:
-  #   image: ghcr.io/linuxserver/ldap-auth:version-3.3.1
-  #   container_name: ldap-auth
-  #   environment:
-  #     - TZ=America/Sao_Paulo
-  #     - FERNETKEY= #optional
-  #     - CERTFILE= #optional
-  #     - KEYFILE= #optional
-  #   ports:
-  #     - 8888:8888
-  #     - 9000:9000
-  #   networks:
-  #     - presto
-  
-  # openldap:
-  #   image: bitnami/openldap:2.5.5
-  #   ports:
-  #     - 1389:1389
-  #     - 1636:1636
-  #   environment:
-  #     - LDAP_ADMIN_USERNAME=admin
-  #     - LDAP_ADMIN_PASSWORD=adminpassword
-  #     - LDAP_USERS=user01,user02
-  #     - LDAP_PASSWORDS=password1,password2
-  #   networks:
-  #     - presto
-  #   volumes:
-  #     - ./openldap_data:/bitnami/openldap
-
-  # hue:
-  #   image: hue:4.10.0
-  #   build: 
-  #     context: hue
-  #     dockerfile: Dockerfile
-  #   container_name: hue
-  #   ports: 
-  #     - 8888:8888
-  #   volumes: 
-  #     - ./hue/hue.ini:/usr/share/hue/desktop/conf/z-hue-overrides.ini
-  #   networks: 
-  #     - presto
-  #   depends_on: 
-  #     - mysql
 
   hive-metastore:
     image: hive-metastore:0.1

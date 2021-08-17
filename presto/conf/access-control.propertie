@@ -1,0 +1,7 @@
+hive.security=ranger
+ranger.policy-rest-url=http://ranger:6080
+ranger.service-name=raner-auth
+ranger.username=admin
+ranger.password=ranger123
+ranger.policy-refresh-interval=30s
+access-control.name=read-only
