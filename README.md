@@ -98,6 +98,3 @@ An open source SQL Assistant for Databases & Data Warehouses i.e. an easy GUI fo
 - [AN INTRODUCTION TO THE PRESTO ARCHITECTURE](https://www.alluxio.io/learn/presto/architecture/)
 - [Presto Docs](https://prestodb.io/docs/current/overview/concepts.html)
 - [Apache Ranger](https://cwiki.apache.org/confluence/display/RANGER/Index)
-- [Hive](https://towardsdatascience.com/making-big-moves-in-big-data-with-hadoop-hive-parquet-hue-and-docker-320a52ca175)
-- [Hive Free Book](https://github.com/Prokopp/the-free-hive-book/blob/master/the-free-hive-book.md#introduction)
-- [Hive Architecture](https://cwiki.apache.org/confluence/display/Hive/Design)
