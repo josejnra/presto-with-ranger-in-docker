@@ -7,7 +7,7 @@ services:
  
   # The prestodb-sandbox container includes latest Presto (from Prestodb.io) as well as the Presto CLI.
   presto:
-    image: meu-presto:0.257
+    image: meu-presto:0.259
     build: 
       context: ./presto
       dockerfile: Dockerfile

@@ -58,8 +58,8 @@ presto> select * from jmx.current."com.facebook.airlift.discovery.client:name=an
 
 
 ### Apache Ranger Plugin
-In order to generate the `ranger-<version>-presto-plugin.tar.gz` you must follow the instructions described on this [link](ranger-<version>-knox-plugin.tar.gz).
-Just execute the **mvn** inside the presto-plugin folder.
+In order to generate the `ranger-<version>-presto-plugin.tar.gz` you must follow the instructions described on this [link](https://github.com/apache/ranger).
+Basically, after compiling a docker image for Apache Ranger, just go to `/opt/apache-ranger-2.1.0/target`. There you'll find the all *.tar.gz files.
 
 ## Apache Ranger
 Apache Ranger is a framework to enable, monitor and manage comprehensive data security across the Hadoop platform.
