@@ -17,7 +17,7 @@ services:
     networks: 
       - presto
     volumes: 
-      # - ./presto/data:/var/lib/presto
+      - ./presto/data:/var/lib/presto
       - ./presto/conf:/opt/presto-server/etc
 
     # docker container cp ranger-presto-plugin presto:/opt/presto-server/plugin
@@ -38,15 +38,17 @@ services:
 
     # docker container cp ranger-presto-plugin trino:/usr/lib/trino/plugin
 
-  # superset:
-  #   image: apache/superset:1.2.0
-  #   container_name: superset
-  #   ports: 
-  #     - 8088:8088
-  #   depends_on: 
-  #     - presto
-  #   networks: 
-  #     - presto
+  superset:
+    image: apache/superset:1.2.0
+    container_name: superset
+    ports: 
+      - 8088:8088
+    depends_on: 
+      - presto
+    networks: 
+      - presto
+    volumes: 
+      - ./superset:/app/superset_home
 
 # docker exec -it superset superset fab create-admin \
 #           --username admin \
