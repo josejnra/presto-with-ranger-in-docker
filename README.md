@@ -1,22 +1,5 @@
-# Presto with Apache Ranger in Docker
-docker-compose for development purposes.
+# Presto
 
-## How to run
-Building and pulling images. This will take several minutes.
-```bash
-docker-compose build
-```
-Then, just run:
-```bash
-docker-compose up -d
-```
-
-- Presto running at [http://localhost:8080](http://localhost:8080).
-- Apache Ranger running at [http://localhost:6080](http://localhost:6080).
-  - User is `admin` and password is `ranger1234`. The UI may take a while in order to start.
-- Apache Solr running at [http://localhost:8983](http://localhost:8983).
-
-## Presto
 Presto is an open source distributed system that can run on multiple machines. Its distributed SQL query engine was built for fast analytic queries. A typical Presto deployment will include one Presto Coordinator and any number of Presto Workers.
 
 **Presto Coordinator**: Used to submit queries and manages parsing, planning, and scheduling query execution across Presto Workers. The Presto Coordinator is truly the brain of any Presto installation and every installation requires it. It parses statements, plans queries, and manages Presto worker nodes, and it tracks all the Workers’ activity to coordinate queries. It gets results from the Workers and returns final results back to the client. Coordinators connect with workers and clients via REST.
@@ -27,7 +10,7 @@ Presto is an open source distributed system that can run on multiple machines. I
     <img src="images/presto_architecture.png" alt="Presto High Level Architecture" />
 </p>
 
-### Presto Components
+## Presto Components
 
 **Catalog**: Presto Catalogs contain the information about where data is located – they contain schemas and the data source. When users run a SQL statement in Presto, it means they’re running it against one or more catalogs. For example, you may build a Hive catalog to access Hive information from the Hive data source. Catalogs are defined in properties files stored in the Presto configuration directory. For example, the Hive connector maps each Hive database to a schema, so if the Hive connector is mounted as the hive catalog, and Hive contains a table clicks in database web, that table would be accessed in Presto as hive.web.clicks.
 
@@ -47,7 +30,7 @@ Presto is an open source distributed system that can run on multiple machines. I
 
 **Exchange**: Exchanges transfer data between Presto nodes for different stages of a query. Tasks produce data into an output buffer and consume data from other tasks using an exchange client.
 
-### Presto CLI 
+## Presto CLI 
 Example of commands:
 ```bash
 presto> show catalogs;
@@ -57,7 +40,7 @@ presto> select * from jmx.current."com.facebook.airlift.discovery.client:name=an
 ```
 
 
-### Apache Ranger Plugin
+## Apache Ranger Plugin
 In order to generate the `ranger-<version>-presto-plugin.tar.gz` you must follow the instructions described on this [link](https://github.com/apache/ranger).
 Basically, after compiling a docker image for Apache Ranger, just go to `/opt/apache-ranger-2.1.0/target`. There you'll find the all *.tar.gz files.
 
@@ -81,7 +64,7 @@ Apache Ranger has the following goals:
 **Ranger KMS** - This service provides key management for Hadoop HDFS Encryption (TDE). It is highly scalable and provides access control and auditing. This service is optional and only needed if you are planning to use HDFS TDE.
 
 
-### Requirements
+## Requirements
 > RDBMS - MySQL
 
 - Storing policies
@@ -93,11 +76,26 @@ Apache Ranger has the following goals:
 - Store Audit Logs
 - Used by RangerAdmin Portal to search AuditLogs
 
-### HDFS
+## HDFS
 Store Audit Logs (Optional, but recommended)
 
 ## Hue
 An open source SQL Assistant for Databases & Data Warehouses i.e. an easy GUI for looking into HDFS, Hive etc. Very handy for beginners! It is maintained by Cloudera and you can find it on GitHub.
+
+## How to run
+Building and pulling images. This will take several minutes.
+```bash
+docker-compose build
+```
+Then, just run:
+```bash
+docker-compose up -d
+```
+
+- Presto running at [http://localhost:8080](http://localhost:8080).
+- Apache Ranger running at [http://localhost:6080](http://localhost:6080).
+  - User is `admin` and password is `ranger1234`. The UI may take a while in order to start.
+- Apache Solr running at [http://localhost:8983](http://localhost:8983).
 
 # Referencies
 - [AN INTRODUCTION TO THE PRESTO ARCHITECTURE](https://www.alluxio.io/learn/presto/architecture/)
